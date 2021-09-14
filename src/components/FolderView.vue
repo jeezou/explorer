@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="folder-field">
+    <div class="folder-field" :style="{ 'padding-left': 70 * depth + 'px' }">
       <div
         class="folder-container"
         :class="{ active: isNotCurrent(name) }"
@@ -16,14 +16,17 @@
           {{ name }}
         </p>
       </div>
-      <div class="files-container">
+      <div
+        class="files-container"
+        :style="{ 'padding-left': 70 * (depth ? depth - 1 : 1) + 'px' }"
+      >
         <template v-for="(file, index) in files" :key="index">
           <transition name="fade">
             <FileView
               :name="file.name"
               :type="file.type"
               :length="file.length"
-              v-if="isContain(name) && isNotCurrent(name)"
+              v-show="isContain(name) && isNotCurrent(name)"
             />
           </transition>
         </template>
@@ -97,7 +100,7 @@ export default {
 <style scoped lang="scss">
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .fade-enter-from,
@@ -107,36 +110,58 @@ export default {
 
 .wrapper {
   width: 100%;
+  margin: 0;
+  padding: 0;
   .folder-field {
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-rows: auto auto;
     column-gap: 50px;
     margin: 0 0 20px 0;
 
     .files-container {
       justify-self: start;
+      width: 60%;
 
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      flex-wrap: wrap;
-      width: 100%;
+      // flex-wrap: wrap;
+      // width: 100%;
     }
     .folder-container {
       display: flex;
       flex-direction: column;
-      padding: 5px;
+      align-items: center;
+      padding: 10px 22px;
+      border-radius: 20px;
       cursor: pointer;
+
+      height: fit-content;
+      width: fit-content;
 
       transition: all 0.3s ease-in-out;
 
       &:hover {
-        transform: scale(0.8);
+        // transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        // margin-left: 20px;
+
+        background: rgba(255, 255, 255, 0.137);
+
+        .decor {
+          transform: scale(0.9);
+        }
       }
 
       &.active {
-        padding-left: 30px;
+        background: rgba(255, 255, 255, 0.52);
+        color: #2b2b2b;
+        // margin-left: 50px;
+
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
         transform: scale(0.9);
         pointer-events: none;
       }
@@ -146,12 +171,17 @@ export default {
         width: 100px;
         height: 100px;
         background: url("../assets/folder.svg");
+        background-size: cover;
 
         transition: all 0.3s ease-in-out;
       }
       .folder {
         font-size: 1.5em;
         pointer-events: none;
+        width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
       }
     }
   }
@@ -162,7 +192,7 @@ export default {
     column-gap: 25px;
     .folder-container {
       &.active {
-        padding-left: 20px;
+        // padding-left: 20px;
       }
     }
   }

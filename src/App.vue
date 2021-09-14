@@ -4,17 +4,26 @@
   <div class="dec"></div>
 
   <div class="container">
-    <div class="current-url">Current link: {{ link }}</div>
-    <FolderView
-      name="root"
-      :folders="folders"
-      :files="files"
-      :depth="depth + 1"
-      :current="current_depth"
-      @clicked="changeFolder"
-      :key="current_depth"
-      :link="link"
-    />
+    <h2 class="title">Simple Local Files Explorer</h2>
+    <div class="menu-bar">
+      <div class="menu-item" @click="resetChanges">Reset</div>
+      <div class="menu-item">All Files</div>
+      <div class="menu-item">Images</div>
+      <div class="menu-item">Folders</div>
+    </div>
+    <div class="main">
+      <div class="current-url" v-if="link">Current link: {{ link }}</div>
+      <FolderView
+        name="root"
+        :folders="folders"
+        :files="files"
+        :depth="depth + 1"
+        :current="current_depth"
+        @clicked="changeFolder"
+        :key="current_depth"
+        :link="link"
+      />
+    </div>
   </div>
 </template>
 
@@ -80,6 +89,11 @@ export default {
         this.link = tmp;
       }
     },
+    resetChanges() {
+      this.link = null;
+      this.depth = -1;
+      this.current_depth = -1;
+    },
   },
 };
 </script>
@@ -93,72 +107,117 @@ export default {
 }
 #app {
   padding: 70px 0;
-  background-image: linear-gradient(to bottom, #f1f4f9, #dff1ff);
-  min-height: 100vh;
-  display: block;
-  // display: flex;
 
-  font-family: "Comfortaa", Avenir, Helvetica, Arial, sans-serif;
-  color: #464861;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  .dec {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-    filter: blur(150px);
-
-    &:first-child {
-      height: 50%;
-      width: 90%;
-      top: 5%;
-      left: 5%;
-      background: rgb(251, 126, 255);
-    }
-    &:nth-child(2) {
-      height: 50%;
-      width: 60%;
-      left: 2%;
-      bottom: 3%;
-      background: rgb(78, 206, 199);
-    }
-    &:nth-child(3) {
-      height: 40%;
-      width: 40%;
-      right: 10%;
-      bottom: 10%;
-      background: rgb(249, 251, 99);
-    }
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("./assets/landscape4.jpg");
+    background-size: cover;
   }
 
-  .container {
-    width: 80%;
-    height: 80%;
-    position: relative;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: "Comfortaa", Avenir, Helvetica, Arial, sans-serif;
+  // color: #464861;
+  color: rgb(224, 224, 224);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    margin: 0 auto 70px auto;
-    padding: 50px;
+.container {
+  width: 80%;
+  height: 80%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.103);
+  border-radius: 20px;
+  // backdrop-filter: blur(5px);
+  box-shadow: 0 0 45px 10px rgba(0, 0, 0, 0.205);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 
+  margin: 0 auto 70px auto;
+  padding: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1;
+
+  .title {
+    font-size: 2.2em;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 30px 0;
+  }
+
+  .menu-bar {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    z-index: 1;
+    column-gap: 100px;
+    font-size: 1.2em;
+
+    .menu-item {
+      margin: 30px 0 50px 0;
+      cursor: pointer;
+      position: relative;
+
+      transition: all 0.2s ease-in-out;
+
+      &:before {
+        content: "";
+        position: absolute;
+        box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.52);
+        height: 2px;
+        border-radius: 30px;
+        width: 0;
+        top: 115%;
+        left: 0;
+
+        transition: all 0.2s ease-in-out;
+      }
+
+      &:hover {
+        color: #fafafa;
+        &:before {
+          width: 100%;
+          box-shadow: inset 0 0 0 5px #fafafa;
+        }
+      }
+    }
 
     .current-url {
-      font-size: 2.2em;
-      margin: 0 0 40px 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 1.6em;
     }
   }
 }
+
+.main {
+  width: 100%;
+  padding: 50px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.103);
+  border-radius: 20px;
+  // backdrop-filter: blur(5px);
+  margin: auto;
+  position: relative;
+
+  .current-url {
+    font-size: 2em;
+    position: absolute;
+    right: 10%;
+  }
+}
+// }
 
 @media screen and (max-width: 1200px) {
   #app {

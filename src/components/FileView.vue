@@ -28,13 +28,24 @@ export default {
 
 <style scoped lang="scss">
 .file-item {
+  align-self: left;
   display: flex;
   column-gap: 20px;
   margin: 15px 0 10px 0;
   padding: 10px;
   border-radius: 15px;
+  position: relative;
 
-  width: 60%;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    margin-left: 30px;
+    background: rgba(255, 255, 255, 0.26);
+    margin-left: 30px;
+  }
+
+  width: 80%;
 
   background: rgba(255, 255, 255, 0.185);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -60,14 +71,31 @@ export default {
   .picture {
     width: 85px;
     height: 85px;
-    background: url("../assets/document.svg");
+    background: url("../assets/other.svg");
     background-size: cover;
 
+    &.json {
+      background: url("../assets/json.svg");
+      background-size: cover;
+    }
+
+    &.js {
+      background: url("../assets/js.svg");
+      background-size: cover;
+    }
+
     &.jpg,
-    &.png,
-    &.jpeg,
+    &.jpeg {
+      background: url("../assets/jpg.svg");
+      background-size: cover;
+    }
+    &.png {
+      background: url("../assets/png.svg");
+      background-size: cover;
+    }
     &.svg {
-      background: url("../assets/image.svg");
+      background: url("../assets/svg.svg");
+      background-size: cover;
     }
   }
 }
