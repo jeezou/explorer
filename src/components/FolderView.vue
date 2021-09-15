@@ -26,19 +26,19 @@
         }"
       >
         <template v-for="(file, index) in files" :key="index">
-          <transition name="fade">
+          <transition-expand>
             <FileView
               :name="file.name"
               :type="file.type"
               :length="file.length"
               v-show="isContain(name) && isNotCurrent(name)"
             />
-          </transition>
+          </transition-expand>
         </template>
       </div>
     </div>
     <template v-for="(folder, index) in folders" :key="index">
-      <transition name="fade">
+      <transition-expand>
         <FolderView
           :name="folder.name"
           :folders="folder.folders"
@@ -49,18 +49,19 @@
           v-if="isContain(name)"
           @clicked="$emit('clicked', $event)"
         />
-      </transition>
+      </transition-expand>
     </template>
   </div>
 </template>
 
 <script>
 import FileView from "./FileView";
+import TransitionExpand from "./TransitionExpand.vue";
 import { debounce } from "debounce";
 
 export default {
   name: "FolderView",
-  components: { FileView },
+  components: { FileView, TransitionExpand },
   emits: ["clicked"],
   props: {
     name: String,
@@ -129,16 +130,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .wrapper {
   width: 100%;
   margin: 0;
@@ -147,7 +138,7 @@ export default {
     width: 100%;
     display: grid;
     grid-template-rows: auto auto;
-    // column-gap: 50px;
+    row-gap: 20px;
     margin: 0 0 20px 0;
 
     .files-container {
@@ -158,13 +149,16 @@ export default {
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
     }
     .folder-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 22px;
-      border-radius: 20px;
+      padding: 10px 18px;
+      border-radius: 15px;
       cursor: pointer;
 
       height: fit-content;
@@ -173,9 +167,7 @@ export default {
       transition: all 0.3s ease-in-out;
 
       &:hover {
-        // transform: scale(1.1);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        // margin-left: 20px;
 
         background: rgba(255, 255, 255, 0.137);
 
@@ -185,13 +177,12 @@ export default {
       }
 
       &.active {
-        background: rgba(255, 255, 255, 0.52);
-        color: #2b2b2b;
-        // margin-left: 50px;
+        background: rgba(255, 255, 255, 0.397);
+        color: #383030;
 
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
-        transform: scale(0.9);
+        transform: scale(0.85);
         pointer-events: none;
       }
 
@@ -243,10 +234,16 @@ export default {
         width: 70px;
         height: 70px;
       }
+      .folder {
+        font-size: 1.4em;
+      }
     }
     .files-container {
       padding: 0;
       width: 90%;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
     }
   }
 }

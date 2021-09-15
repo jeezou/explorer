@@ -30,10 +30,7 @@ export default {
 .file-item {
   align-self: left;
   display: flex;
-  column-gap: 20px;
-  margin: 15px 0 10px 0;
-  padding: 10px;
-  border-radius: 15px;
+  row-gap: 5px;
   position: relative;
 
   transition: all 0.3s ease-in-out;
@@ -41,19 +38,67 @@ export default {
   &:hover {
     cursor: pointer;
     margin-left: 30px;
-    background: rgba(255, 255, 255, 0.26);
+
     margin-left: 30px;
+
+    &:before {
+      border-radius: 15px;
+      height: 20%;
+      top: 40%;
+    }
+  }
+
+  &:first-child {
+    &:before {
+      top: 50%;
+      height: 55%;
+    }
+
+    &:hover {
+      &:before {
+        border-radius: 15px;
+        height: 20%;
+        top: 40%;
+      }
+    }
+  }
+
+  &:last-child {
+    &:before {
+      top: -5%;
+      height: 55%;
+    }
+
+    &:hover {
+      &:before {
+        border-radius: 15px;
+        height: 20%;
+        top: 40%;
+      }
+    }
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    border-radius: 0;
+    top: 0;
+    border-radius: 2px;
+
+    left: -10px;
+    width: 4px;
+    height: 105%;
+    background: rgb(197, 197, 197);
+
+    transition: all 0.3s ease-in-out;
   }
 
   width: 80%;
-
-  background: rgba(255, 255, 255, 0.185);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
 
   .specs {
     display: grid;
+    margin: 20px 5px;
     flex-direction: column;
 
     .file {
@@ -71,6 +116,7 @@ export default {
   .picture {
     width: 85px;
     height: 85px;
+    margin: 20px;
     background: url("../assets/other.svg");
     background-size: cover;
 
@@ -103,6 +149,37 @@ export default {
 @media screen and (max-width: 1200px) {
   .file-item {
     width: 100%;
+
+    .picture {
+      width: 75px;
+      height: 75px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .file-item {
+    width: 100%;
+    font-size: 0.9em;
+
+    .picture {
+      width: 65px;
+      height: 65px;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .file-item {
+    align-items: center;
+    font-size: 0.9em;
+    .picture {
+      width: 60px;
+      height: 60px;
+    }
+    .specs {
+      height: 70px;
+    }
   }
 }
 
