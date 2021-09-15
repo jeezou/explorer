@@ -183,16 +183,10 @@ export default {
   }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
   .file-item {
-    align-items: center;
-    font-size: 0.9em;
-    .picture {
-      width: 60px;
-      height: 60px;
-    }
-    .specs {
-      height: 70px;
+    &:before {
+      display: none;
     }
   }
 }
