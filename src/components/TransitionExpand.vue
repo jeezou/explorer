@@ -71,13 +71,12 @@ export default {
 
 .expand-enter-active,
 .expand-leave-active {
-  transition: all 1s ease-in-out;
+  transition: height 1s ease-in-out;
   overflow: hidden;
 }
 
 .expand-enter,
 .expand-leave-to {
   height: 0;
-  opacity: 0;
 }
 </style>
