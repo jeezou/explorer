@@ -183,7 +183,7 @@ export default {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
         transform: scale(0.85);
-        pointer-events: none;
+        // pointer-events: none;
       }
 
       .decor {

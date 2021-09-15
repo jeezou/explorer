@@ -77,6 +77,7 @@ export default {
       return Math.max(window.innerWidth, document.documentElement.clientWidth);
     },
     changeFolder(e) {
+      // console.log(e);
       if (this.link) {
         let tmpLink = this.link;
         if (tmpLink.indexOf("/") < 0) tmpLink = tmpLink.split();
@@ -91,6 +92,10 @@ export default {
             this.link += `/${e.folder}`;
           }
         } else {
+          if (tmpLink[tmpLink.length - 1] == e.folder) {
+            tmpLink.pop();
+            this.link = tmpLink.join("/");
+          }
           tmpLink.length = e.depth + 1;
           if (tmpLink.indexOf("/") < 0) this.link = tmpLink.join("/");
           else this.link = tmpLink.join("");
