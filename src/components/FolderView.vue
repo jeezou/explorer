@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
-    <div class="folder-field" :style="{ 'padding-left': 70 * depth + 'px' }">
+    <div
+      class="folder-field"
+      :style="{ 'padding-left': paddingOnQuery * depth + 'px' }"
+    >
       <div
         class="folder-container"
         :class="{ active: isNotCurrent(name) }"
@@ -18,7 +21,9 @@
       </div>
       <div
         class="files-container"
-        :style="{ 'padding-left': 70 * (depth ? depth - 1 : 1) + 'px' }"
+        :style="{
+          'padding-left': paddingOnQuery * (depth ? depth - 1 : 1) + 'px',
+        }"
       >
         <template v-for="(file, index) in files" :key="index">
           <transition name="fade">
@@ -51,6 +56,8 @@
 
 <script>
 import FileView from "./FileView";
+import { debounce } from "debounce";
+
 export default {
   name: "FolderView",
   components: { FileView },
@@ -63,7 +70,31 @@ export default {
     current: Number,
     link: String,
   },
+  data() {
+    return {
+      windowWidth: window.innerWidth,
+      paddingOnQuery: 70,
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.queryChecker();
+      window.addEventListener("resize", debounce(this.queryChecker, 200));
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", debounce(this.queryChecker, 200));
+  },
   methods: {
+    queryChecker() {
+      this.windowWidth = window.innerWidth;
+      if (this.windowWidth <= 992 && this.windowWidth > 768)
+        this.paddingOnQuery = 50;
+      else if (this.windowWidth <= 768 && this.windowWidth > 500)
+        this.paddingOnQuery = 30;
+      else if (this.windowWidth <= 500) this.paddingOnQuery = 0;
+      else this.paddingOnQuery = 70;
+    },
     childEvent() {
       this.$emit("clicked", this.$event);
     },
@@ -116,19 +147,17 @@ export default {
     width: 100%;
     display: grid;
     grid-template-rows: auto auto;
-    column-gap: 50px;
+    // column-gap: 50px;
     margin: 0 0 20px 0;
 
     .files-container {
       justify-self: start;
-      width: 60%;
+      width: 80%;
 
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      // flex-wrap: wrap;
-      // width: 100%;
     }
     .folder-container {
       display: flex;
@@ -189,23 +218,35 @@ export default {
 
 @media screen and (max-width: 1200px) {
   .wrapper .folder-field {
-    column-gap: 25px;
-    .folder-container {
-      &.active {
-        // padding-left: 20px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 1200px) {
-  .wrapper .folder-field {
     column-gap: 10px;
     .folder-container {
       .decor {
         width: 80px;
         height: 80px;
       }
+    }
+    .files-container {
+      width: 80%;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .wrapper .folder-field {
+    align-items: center;
+    width: 100%;
+    column-gap: 10px;
+    .folder-container {
+      align-self: center;
+      padding: 10px;
+      .decor {
+        width: 70px;
+        height: 70px;
+      }
+    }
+    .files-container {
+      padding: 0;
+      width: 90%;
     }
   }
 }

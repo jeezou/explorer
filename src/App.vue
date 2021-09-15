@@ -11,8 +11,14 @@
       <div class="menu-item">Images</div>
       <div class="menu-item">Folders</div>
     </div>
+    <div class="current-url-query" v-if="link && windowWidth <= 992">
+      Current link: {{ link }}
+    </div>
+
     <div class="main">
-      <div class="current-url" v-if="link">Current link: {{ link }}</div>
+      <div class="current-url" v-if="link && windowWidth > 992">
+        Current link: {{ link }}
+      </div>
       <FolderView
         name="root"
         :folders="folders"
@@ -31,6 +37,8 @@
 import FolderView from "./components/FolderView.vue";
 import data from "./data/list";
 
+import { debounce } from "debounce";
+
 export default {
   name: "App",
   components: {
@@ -44,9 +52,30 @@ export default {
       depth: -1,
       current_depth: -1,
       link: null,
+
+      windowWidth: window.innerWidth,
     };
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.windowWidth = this.getWindowWidth();
+      window.addEventListener(
+        "resize",
+        debounce(() => (this.windowWidth = this.getWindowWidth()), 100)
+      );
+    });
+  },
+
+  beforeDestroy() {
+    window.removeEventListener(
+      "resize",
+      debounce(() => (this.windowWidth = getWindowWidth()), 100)
+    );
+  },
   methods: {
+    getWindowWidth() {
+      return Math.max(window.innerWidth, document.documentElement.clientWidth);
+    },
     changeFolder(e) {
       if (this.link) {
         let tmpLink = this.link;
@@ -191,13 +220,14 @@ export default {
         }
       }
     }
-
-    .current-url {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: 1.6em;
-    }
+  }
+  .current-url-query {
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6em;
   }
 }
 
@@ -230,6 +260,17 @@ export default {
   }
 }
 
+@media screen and (max-width: 992px) {
+  #app {
+    .container {
+      .menu-bar {
+        column-gap: 0;
+        justify-content: space-around;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   #app {
     font-size: 0.8em;
@@ -238,14 +279,14 @@ export default {
     .container {
       border: none;
       box-shadow: none;
-      backdrop-filter: none;
+      background: transparent;
       border-radius: none;
       margin: 0;
       width: 100%;
       padding: 70px 20px 20px 20px;
 
-      .current-url {
-        font-size: 1.8em;
+      .main {
+        padding: 10px 20px;
       }
     }
   }
